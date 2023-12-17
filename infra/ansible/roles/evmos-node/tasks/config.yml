@@ -1,0 +1,45 @@
+- name: Create Data directory
+  file:
+    path: '{{ data_directory }}'
+    state: directory
+    owner: '{{ ansible_ssh_user }}'
+    group: '{{ ansible_ssh_user }}'
+    mode: '0777'
+
+- name: Get the EBS volume/block
+  shell: lsblk -x SIZE | tail -1 | awk '{print $1}'
+  register: ebs_nvme_block
+  check_mode: false
+  changed_when: false
+
+- name: Printout the block
+  debug:
+    var: ebs_nvme_block.stdout_lines[0]
+
+- name: Create a xfs filesystem on EBS volume
+  filesystem:
+    fstype: xfs
+    dev: '/dev/{{ ebs_nvme_block.stdout_lines[0] }}'
+  when: not ansible_check_mode
+
+- name: Get UUID of ebs volume
+  shell: lsblk -o +UUID | grep '{{ ebs_nvme_block.stdout_lines[0] }}' |  awk '{print $NF}'
+  register: uuid
+  check_mode: false
+  changed_when: false
+
+- name: Print UUID
+  debug:
+    var: uuid.stdout
+
+- name: Mount the ebs volume with {{ data_directory }} directory
+  ansible.builtin.mount:
+    fstype: xfs
+    path: '{{ data_directory }}'
+    src: UUID={{ uuid.stdout }} # /dev/{{ ebs_nvme_block.stdout_lines[0] }} # Either use UUID or source path
+    state: mounted
+    opts: defaults,nofail
+    dump: '0'
+    passno: '2'
+    backup: yes
+  when: not ansible_check_mode

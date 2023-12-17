@@ -1,0 +1,46 @@
+name: Ansible keystore playbook
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT:
+        required: true
+        type: choice
+        description: environment to run ansible
+        options:
+          - testnet
+
+jobs:
+  ansible-deploy:
+    name: deploy-evmos-node
+    runs-on: ubuntu-latest
+    container: cytopia/ansible:2.13-infra
+    environment:
+      name: ${{ github.event.inputs.ENVIRONMENT }}
+    env:
+      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      ANSIBLE_HOST_KEY_CHECKING: False
+    steps:
+      - uses: actions/checkout@v3
+      - name: Add SSH Key
+        run: |
+          echo "CI running on ${{ github.event.inputs.ENVIRONMENT }} environment"
+          mkdir -p /home/runner/.ssh
+          # DOKKU_SSH_KEY is the name of the repository secret
+          echo "${{ secrets.SSH_ANSIBLE }}" > /home/runner/.ssh/github_actions
+          chmod 600 /home/runner/.ssh/github_actions
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add /home/runner/.ssh/github_actions
+          ssh-add -L
+
+      - name: Set ansible_inventory
+        run: |
+          echo "CI running on ${{ github.event.inputs.ENVIRONMENT }} environment"
+          cd infra/ansible
+          echo "${{ secrets.HOSTS }}" > hosts.ini
+
+      - name: Run Playbook
+        run: |
+          echo "CI running on ${{ github.event.inputs.ENVIRONMENT }} environment"
+          cd infra/ansible
+          ansible-playbook playbook-evmos.yml -i hosts.ini -v -b

@@ -1,0 +1,9 @@
+---
+- name: Configure Node
+  import_tasks: config.yml
+  tags:
+    - config
+- name: Install Docker
+  import_tasks: docker-service.yml
+  tags:
+    - docker-compose

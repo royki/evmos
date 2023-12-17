@@ -1,0 +1,5 @@
+#!/usr/bin/ansible-playbook
+- hosts: sandbox
+  roles:
+  - docker
+  - evmos-node

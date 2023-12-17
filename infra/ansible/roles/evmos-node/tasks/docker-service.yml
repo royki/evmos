@@ -1,0 +1,26 @@
+- name: Create evmos data directory
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: directory
+    recurse: yes
+    owner: '{{ ansible_ssh_user }}'
+    group: '{{ ansible_ssh_user }}'
+  with_items:
+    - '{{ data_directory }}/evmos'
+    - '{{ data_directory }}/evmos/evmos-dir'
+  when: not ansible_check_mode
+
+- name: Copy docker-compose to {{ data_directory }} directory
+  template:
+    src: 'docker-compose.yml.j2'
+    dest: '{{ data_directory }}/evmos/docker-compose.yml'
+    owner: '{{ ansible_ssh_user }}'
+    group: '{{ ansible_ssh_user }}'
+
+- name: Run Docker compose
+  command: |
+    chdir={{ data_directory }}
+    /usr/local/bin/docker-compose -f {{ data_directory }}/evmos/docker-compose.yml up -d --force-recreate
+  changed_when: false
+  when: not ansible_check_mode
+

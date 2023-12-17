@@ -1,0 +1,16 @@
+---
+# handlers file for ew_docker
+
+- name: Restart docker
+  systemd:
+    name: docker
+    state: restarted
+
+- name: Stop docker
+  systemd:
+    name: docker
+    state: stopped
+
+- name: Reload docker daemon
+  systemd:
+    daemon_reload: true

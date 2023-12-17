@@ -1,0 +1,2 @@
+data_directory: '/data'
+evmos_image: 'royki/evmos:v0.0.2'

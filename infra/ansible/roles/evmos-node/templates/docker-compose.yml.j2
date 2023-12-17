@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  evmos-node:
+    container_name: evmos-node
+    image: {{ evmos_image }}
+    restart: always
+    command:
+      - ./single-node-start.sh
+    ports:
+      - 8545:8545
+      - 26660:26660
+    volumes:
+      - ./evmos-dir:/tmp
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:26657/status" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
