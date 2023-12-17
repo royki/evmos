@@ -19,12 +19,12 @@
 ## Infra Provision
 
 - [x] Terraform is used to provision 3 ec2 instances for validator nodes
-- [ ] Terraform Cloud to trigger infra provising
-- [ ] Ansible to trigger infra configuration
-    - [ ] Volume setup
-    - [ ] Docker installation
-    - [ ] Docker compose file
-    - [ ] Necessary configurations for evmos validator node i.e. genesis file, keys, app.toml for each validator node
+- [x] Terraform Cloud to trigger infra provising
+- [x] Ansible to trigger infra configuration
+    - [x] Volume setup
+    - [x] Docker installation
+    - [x] Docker compose file
+    - [x] Necessary configurations for evmos validator node i.e. genesis file, keys, app.toml for each validator node
     - [ ] Monitoring instace setup
 
 ### Execute from local to provision infra
