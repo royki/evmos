@@ -40,4 +40,4 @@ jobs:
           context: ./infra
           push: true
           platforms: linux/amd64, linux/arm64
-          tags: royki/evmos:latest, royki/evmos:${{ steps.meta.outputs.tag }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/evmos:latest, ${{ secrets.DOCKERHUB_USERNAME }}/evmos:${{ steps.meta.outputs.tag }}
