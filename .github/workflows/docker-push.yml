@@ -31,13 +31,13 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: docker.io
-          username: tharsishq
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./infra
           push: true
           platforms: linux/amd64, linux/arm64
-          tags: tharsishq/evmos:latest, tharsishq/evmos:${{ steps.meta.outputs.tag }}
+          tags: royki/evmos:latest, royki/evmos:${{ steps.meta.outputs.tag }}
