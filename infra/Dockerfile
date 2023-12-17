@@ -40,6 +40,10 @@ COPY --from=build-env /go/src/github.com/evmos/"$repo"/build/"$repo"d .
 COPY ./evmos-setup.sh ./multi-node-start.sh
 COPY ./evmos-setup.sh ./single-node-start.sh
 
+# Grant execute permissions to the scripts
+RUN chmod +x ./multi-node-start.sh ./single-node-start.sh
+# RUN chown -R $USERNAME:$USERNAME /tmp
+
 ENV EXTRA_FLAGS=${extra_flags}
 ENV CHAIN=${repo}
 

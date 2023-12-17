@@ -3,15 +3,17 @@ version: '3.7'
 services:
   single-node1:
     container_name: single-node1
-    image: tharsishq/evmos:latest
+    image: royki/evmos:v0.0.2
     restart: always
     command:
-      - ./evmos-setup.sh
+      - ./single-node-start.sh
     ports:
       - 8545:8545
       - 26660:26660
     volumes:
-      - ./evmos-setup.sh:/evmos-setup.sh
-      - ./evmos-datadir:/tmp/evmos-datadir
+      - ./evmos-dir:/tmp
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:26657/status" ]
+      interval: 30s
+      timeout: 10s
       retries: 5
-

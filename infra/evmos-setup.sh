@@ -10,7 +10,7 @@ KEY="dev0"
 CHAINID="$CHAIN"_9000-1
 CHAIND="$CHAIN"d
 MONIKER="mymoniker"
-DATA_DIR=$(mktemp -d -t evmos-datadir)
+DATA_DIR=$(mktemp -d -t evmos-datadir.XXXXX)
 MNEMONIC="stumble tilt business detect father ticket major inner awake jeans name vibrant tribe pause crunch sad wine muscle hidden pumpkin inject segment rocket silver"
 
 GENESIS=$DATA_DIR/config/genesis.json
@@ -63,3 +63,11 @@ sed -i.bak 's/pruning-interval = "0"/pruning-interval = "10"/g' "$APP_CONFIG"
 # Make sure localhost is always 0.0.0.0 to make it work on docker network
 sed -i 's/pprof_laddr = "localhost:6060"/pprof_laddr = "0.0.0.0:6060"/g' $CONFIG
 sed -i 's/127.0.0.1/0.0.0.0/g' $APP_CONFIG
+
+echo "running evmos with extra flags $EXTRA_FLAGS"
+
+echo "starting evmos node $i in background ..."
+./$CHAIND start --pruning=nothing --rpc.unsafe \
+--json-rpc.enable true --api.enable \
+--keyring-backend test --home $DATA_DIR $EXTRA_FLAGS \
+>$DATA_DIR/node.log
