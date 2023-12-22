@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Add SSH Key
-        run: |         
+        run: |
           mkdir -p /home/runner/.ssh
           # DOKKU_SSH_KEY is the name of the repository secret
           echo "${{ secrets.SSH_ANSIBLE }}" > /home/runner/.ssh/github_actions
@@ -33,11 +33,11 @@ jobs:
           ssh-add -L
 
       - name: Set ansible_inventory
-        run: |          
+        run: |
           cd infra/ansible
           echo "${{ secrets.HOSTS }}" > hosts.ini
 
       - name: Run Playbook
-        run: |          
+        run: |
           cd infra/ansible
           ansible-playbook playbook-evmos.yml -i hosts.ini -v -b
