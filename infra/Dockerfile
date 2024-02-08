@@ -37,7 +37,7 @@ RUN apt update -y && apt install jq bc -y
 # Copy over binaries from the build-env
 COPY --from=build-env /go/src/github.com/evmos/"$repo"/build/"$repo"d .
 
-COPY ./evmos-setup.sh ./multi-node-start.sh
+COPY ./evmos-multisetup.sh ./multi-node-start.sh
 COPY ./evmos-setup.sh ./single-node-start.sh
 
 # Grant execute permissions to the scripts
